@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  etl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  db:
+    image: postgres:14.7
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: etldb
+      PGDATA: /data/postgres
+    volumes:
+      - .dbdata:/data/postgres
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
